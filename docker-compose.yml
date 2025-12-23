@@ -1,0 +1,39 @@
+services:
+  controller:
+    build: .
+    container_name: gitops_controller
+    working_dir: /app/controller
+    command: ["python", "main.py"]
+    environment:
+      INTERVALO_SEGUNDOS: "10"
+      ARCHIVO_ESTADO: "/data/estado.json"
+      URL_REPO_ESTADO_DESEADO: "/repos/estado-deseado"
+      RUTA_REPO_LOCAL: "/repos/_clonado_estado_deseado"
+    volumes:
+      # estado compartido
+      - estado_compartido:/data
+
+      # repo local con el estado deseado (el que tú commiteas)
+      - ./repos/estado-deseado:/repos/estado-deseado:ro
+
+      # carpeta para el clone/pull del controller
+      - repos_clonados:/repos/_clonado_estado_deseado
+
+      # acceso al Docker del host (para poder ejecutar docker compose)
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  api:
+    build: .
+    container_name: gitops_api
+    working_dir: /app/controller
+    command: ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8090"]
+    environment:
+      ARCHIVO_ESTADO: "/data/estado.json"
+    ports:
+      - "8090:8090"
+    volumes:
+      - estado_compartido:/data
+
+volumes:
+  estado_compartido:
+  repos_clonados:
