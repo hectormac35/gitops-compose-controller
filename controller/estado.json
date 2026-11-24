@@ -1,8 +1,0 @@
-{
-  "ultimo_commit": "57bcc5c5acf3c52359f8bc1aa5316d5feae84a62",
-  "ultima_aplicacion": "2025-12-22T20:04:09",
-  "ultimo_error": null,
-  "ultimo_evento": "Sin cambios",
-  "actualizado_en": "2025-12-22T21:28:06",
-  "docker_compose_ps": "NAME         IMAGE          COMMAND                  SERVICE   CREATED        STATUS                  PORTS\ngitops_web   nginx:alpine   \"/docker-entrypoint.…\"   web       1 second ago   Up Less than a second   0.0.0.0:8087->80/tcp, [::]:8087->80/tcp\n"
-}

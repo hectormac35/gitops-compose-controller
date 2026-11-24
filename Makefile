@@ -1,10 +1,11 @@
-.PHONY: ayuda up down reiniciar logs logs-controller logs-api estado health limpiar-web cambiar-puerto
+.PHONY: ayuda bootstrap up down reiniciar logs logs-controller logs-api estado historial health limpiar-web cambiar-puerto test demo
 
 # Ruta al repo Git del estado deseado
 ESTADO_DESEADO_REPO=./repos/estado-deseado
 
 ayuda:
 	@echo "Comandos disponibles:"
+	@echo "  make bootstrap             -> Crea el repo Git del estado deseado (solo la primera vez)"
 	@echo "  make up                    -> Levanta controller + API (docker compose)"
 	@echo "  make down                  -> Para y elimina contenedores"
 	@echo "  make reiniciar             -> Reinicia los servicios"
@@ -12,11 +13,17 @@ ayuda:
 	@echo "  make logs-controller       -> Logs del controller"
 	@echo "  make logs-api              -> Logs de la API"
 	@echo "  make estado                -> Consulta el estado (API /estado)"
+	@echo "  make historial             -> Últimos eventos (API /historial)"
+	@echo "  make test                  -> Tests del controlador y la API"
+	@echo "  make demo                  -> Demo: cambio por commit, deriva y rollback"
 	@echo "  make health                -> Healthcheck (API /health)"
 	@echo "  make limpiar-web           -> Elimina el contenedor gitops_web"
 	@echo "  make cambiar-puerto PUERTO=8099 -> Cambia el puerto y hace commit GitOps"
 
-up:
+bootstrap:
+	@./scripts/bootstrap_env_repo.sh
+
+up: bootstrap
 	docker compose up --build -d
 	@echo "✅ Levantado. API: http://localhost:8090"
 
@@ -40,6 +47,9 @@ logs-api:
 estado:
 	@curl -s http://localhost:8090/estado | python3 -m json.tool || true
 
+historial:
+	@curl -s http://localhost:8090/historial | python3 -m json.tool || true
+
 health:
 	@curl -s http://localhost:8090/health | python3 -m json.tool || true
 
@@ -57,3 +67,9 @@ cambiar-puerto:
 	@cd $(ESTADO_DESEADO_REPO) && git add docker-compose.yml
 	@cd $(ESTADO_DESEADO_REPO) && git commit -m "Cambiar puerto a $(PUERTO)"
 	@echo "✅ Puerto cambiado y commit realizado. GitOps aplicará el cambio automáticamente."
+
+test:
+	cd controller && python3 -m pip install -q -r requirements-dev.txt && python3 -m pytest -q
+
+demo:
+	@./scripts/demo.sh

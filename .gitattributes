@@ -1,0 +1,4 @@
+# Saltos de línea siempre LF (evita problemas al editar desde la web de GitHub o desde Windows)
+* text=auto eol=lf
+*.png binary
+*.sh text eol=lf

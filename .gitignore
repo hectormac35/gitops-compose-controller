@@ -6,7 +6,11 @@ venv/
 
 # Runtime
 controller/state.json
+controller/estado.json
 controller/*.log
+
+# Repos locales: se generan con `make bootstrap` (no se versionan)
+repos/
 
 # OS / IDE
 .DS_Store

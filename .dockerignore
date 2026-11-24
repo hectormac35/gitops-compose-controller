@@ -1,0 +1,10 @@
+.git
+.github
+**/.venv
+**/__pycache__
+**/.pytest_cache
+controller/tests
+controller/estado.json
+controller/state.json
+repos
+*.md
