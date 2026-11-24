@@ -5,7 +5,10 @@ Controlador **GitOps** escrito en Python que mantiene un entorno de **Docker Com
 
 Es la misma idea que usan Argo CD o Flux en Kubernetes, aplicada a Docker Compose: local, reproducible y sin coste.
 
-<!-- CAPTURAS -->
+![Demo real: cambio por commit, deriva y rollback](docs/capturas/demo.png)
+
+*`make demo` ejecutado con Docker: el servicio cambia de puerto con un commit, se recupera solo tras borrar su
+contenedor a mano y vuelve atrás con un `git revert`. Cada paso queda registrado en el historial.*
 
 ## 🚀 ¿Qué problema resuelve?
 
@@ -110,6 +113,8 @@ make historial     # en el siguiente ciclo aparece "Deriva corregida"
 | `GET /health` | La API responde |
 | `GET /estado` | Commit aplicado y su mensaje, última aplicación, último evento y error, servicios desplegados (nombre, imagen, estado y puertos) y si el controlador sigue activo. `503` si el controlador aún no ha escrito su estado |
 | `GET /historial` | Últimos 20 eventos |
+
+![Respuesta real de GET /estado](docs/capturas/api-estado.png)
 
 ## ⚙️ Configuración
 
