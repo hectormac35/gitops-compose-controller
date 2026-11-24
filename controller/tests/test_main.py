@@ -86,3 +86,13 @@ def test_un_error_no_para_el_controlador_y_no_se_repite_en_el_historial(entorno)
     docker.fallo = None  # Docker vuelve
     estado = main.reconciliar(config, estado)
     assert estado["ultimo_error"] is None
+
+
+def test_servicios_se_actualizan_aunque_no_haya_cambios(entorno, monkeypatch):
+    """Tras reiniciar con el mismo commit ya aplicado, /estado debe mostrar los servicios desde el primer ciclo."""
+    config, _, _ = entorno
+    estado = main.reconciliar(config, cargar_estado(config.archivo_estado))
+    monkeypatch.setattr(main, "estado_compose", lambda ruta: [{"servicio": "web", "estado": "running", "puertos": ["8099->80/tcp"]}])
+    estado = main.reconciliar(config, {**estado, "servicios": []})
+    assert estado["ultimo_evento"] == "Sin cambios"
+    assert estado["servicios"][0]["puertos"] == ["8099->80/tcp"]

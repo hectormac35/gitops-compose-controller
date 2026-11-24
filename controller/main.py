@@ -41,7 +41,12 @@ def reconciliar(config: Config, estado: Dict[str, Any]) -> Dict[str, Any]:
             }, registrar=True)
 
         print("[SIN CAMBIOS] El estado real coincide con el commit aplicado")
-        return guardar_evento(config.archivo_estado, {"ultimo_evento": "Sin cambios", "ultimo_error": None})
+        # Los servicios se consultan en cada ciclo: tras reiniciar el controlador, /estado los muestra al momento
+        return guardar_evento(config.archivo_estado, {
+            "ultimo_evento": "Sin cambios",
+            "ultimo_error": None,
+            "servicios": estado_compose(config.ruta_repo_local),
+        })
 
     except Exception as e:  # el controlador nunca se cae: registra el error y lo reintenta en el siguiente ciclo
         error = str(e).strip() or e.__class__.__name__
