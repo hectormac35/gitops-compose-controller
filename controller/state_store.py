@@ -20,6 +20,7 @@ def estado_inicial() -> Dict[str, Any]:
         "ultima_correccion_deriva": None,
         "ultimo_error": None,
         "ultimo_evento": "Inicializado",
+        "servicios": [],
         "historial": [],
     }
 
@@ -29,7 +30,9 @@ def cargar_estado(archivo_estado: str) -> Dict[str, Any]:
     if not ruta.exists():
         return estado_inicial()
     try:
-        return {**estado_inicial(), **json.loads(ruta.read_text(encoding="utf-8"))}
+        datos = json.loads(ruta.read_text(encoding="utf-8"))
+        datos.pop("docker_compose_ps", None)  # campo de versiones anteriores (texto en bruto)
+        return {**estado_inicial(), **datos}
     except (json.JSONDecodeError, OSError):
         # Fichero dañado (p. ej. un corte de luz a mitad de escritura): empezamos de cero
         return estado_inicial()

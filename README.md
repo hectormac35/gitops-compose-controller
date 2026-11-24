@@ -108,7 +108,7 @@ make historial     # en el siguiente ciclo aparece "Deriva corregida"
 | Ruta | Descripción |
 |---|---|
 | `GET /health` | La API responde |
-| `GET /estado` | Commit aplicado y su mensaje, última aplicación, último evento y error, salida de `docker compose ps` y si el controlador sigue activo. `503` si el controlador aún no ha escrito su estado |
+| `GET /estado` | Commit aplicado y su mensaje, última aplicación, último evento y error, servicios desplegados (nombre, imagen, estado y puertos) y si el controlador sigue activo. `503` si el controlador aún no ha escrito su estado |
 | `GET /historial` | Últimos 20 eventos |
 
 ## ⚙️ Configuración

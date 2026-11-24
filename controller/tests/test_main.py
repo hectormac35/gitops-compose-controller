@@ -28,7 +28,7 @@ class DockerFalso:
 def entorno(repo_deseado, tmp_path, monkeypatch):
     docker = DockerFalso()
     monkeypatch.setattr(main, "aplicar_compose", docker.aplicar)
-    monkeypatch.setattr(main, "estado_compose", lambda ruta: "gitops_web running")
+    monkeypatch.setattr(main, "estado_compose", lambda ruta: [{"servicio": "web", "estado": "running"}])
     config = Config(
         url_repo_estado_deseado=str(repo_deseado),
         ruta_repo_local=str(tmp_path / "clon"),
@@ -44,6 +44,7 @@ def test_aplica_el_primer_commit(entorno):
     estado = main.reconciliar(config, cargar_estado(config.archivo_estado))
     assert estado["ultimo_evento"] == "Aplicado correctamente"
     assert estado["ultimo_mensaje"] == "Estado inicial"
+    assert estado["servicios"] == [{"servicio": "web", "estado": "running"}]
 
 
 def test_sin_cambios_no_llena_el_historial(entorno):

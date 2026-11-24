@@ -23,7 +23,7 @@ def reconciliar(config: Config, estado: Dict[str, Any]) -> Dict[str, Any]:
                 "ultima_aplicacion": ahora_iso(),
                 "ultimo_evento": "Aplicado correctamente",
                 "ultimo_error": None,
-                "docker_compose_ps": estado_compose(config.ruta_repo_local),
+                "servicios": estado_compose(config.ruta_repo_local),
             }, registrar=True)
             print("[OK] Estado aplicado correctamente")
             return estado
@@ -37,7 +37,7 @@ def reconciliar(config: Config, estado: Dict[str, Any]) -> Dict[str, Any]:
                 "ultimo_evento": "Deriva corregida",
                 "ultima_correccion_deriva": ahora_iso(),
                 "ultimo_error": None,
-                "docker_compose_ps": estado_compose(config.ruta_repo_local),
+                "servicios": estado_compose(config.ruta_repo_local),
             }, registrar=True)
 
         print("[SIN CAMBIOS] El estado real coincide con el commit aplicado")

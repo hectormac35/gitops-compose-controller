@@ -37,3 +37,10 @@ def test_no_deja_ficheros_temporales(tmp_path):
     for i in range(5):
         guardar_evento(archivo, {"ultimo_evento": str(i)})
     assert [p.name for p in tmp_path.iterdir()] == ["estado.json"]
+
+
+def test_descarta_el_campo_antiguo_docker_compose_ps(tmp_path):
+    archivo = tmp_path / "estado.json"
+    archivo.write_text(json.dumps({"ultimo_commit": "abc", "docker_compose_ps": "NAME IMAGE ..."}))
+    estado = cargar_estado(str(archivo))
+    assert "docker_compose_ps" not in estado and estado["ultimo_commit"] == "abc"
